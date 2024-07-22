@@ -1,4 +1,4 @@
-# <---------- Python modules ---------->
+# Python модули
 import time
 import requests
 import os
@@ -8,16 +8,16 @@ from selenium.webdriver.edge.options import Options
 from bs4 import BeautifulSoup
 
 
-# <---------- Variables ---------->
+# Переменные
 filename = 'parser.py'
 
 
-# <---------- Secondary functions ---------->
+# Вспомогательные функции
 def scroll_down(driver: webdriver, scrolls: int) -> None:
     """
-    Scrolls the page down to load.
+    Прокручивает страницу вниз, чтобы прогрузить все позиции.
     :param driver: Webdriver
-    :param scrolls: Number of scrolls
+    :param scrolls: Количество прокруток (умножается на 1000 пикселей)
     :return:
     """
     for i in range(scrolls):
@@ -25,12 +25,12 @@ def scroll_down(driver: webdriver, scrolls: int) -> None:
         time.sleep(2)
 
 
-# <---------- Main functions---------->
+# Основные функции
 def get_htmlCode(link: str) -> str:
     """
-    Gets the HTML code of a page at a given URL.
-    :param link: URL
-    :return: HTML code
+    Получает HTML-код страницы по заданной ссылке.
+    :param link: Ссылка
+    :return: HTML-код
     """
     edge_options = Options()
     # edge_options.add_argument('--headless')
@@ -45,11 +45,11 @@ def get_htmlCode(link: str) -> str:
 
 def parse_htmlCode(html_code: str, name: str, class_: str):
     """
-    Selection of the necessary parts from a given HTML code.
-    :param html_code: HTML code
-    :param name: HTML tag name
-    :param class_: HTML tag class
-    :return: Required code snippet
+    Выбор необходимых частей HTML-кода.
+    :param html_code: HTML-код
+    :param name: HTML-тэг
+    :param class_: HTML-класс
+    :return: Все отрывки кода, подходящие по заданным параметрам
     """
     soup = BeautifulSoup(
         markup=html_code,
@@ -62,7 +62,15 @@ def parse_htmlCode(html_code: str, name: str, class_: str):
     return soup_code
 
 
-def get_products(category: int, keyword: str, amount: int, without: list = []):
+def get_products(category: int, keyword: str, amount: int, without: list = []) -> list[dict]:
+    """
+    Получает список товаров по заданным параметрам.
+    :param category: Категория (цифрой)
+    :param keyword: Ключевое слово
+    :param amount: Количество товаров
+    :param without: Список товаров (id), которые не нужно добавлять
+    :return: Список товаров (имя, цена, id)
+    """
     current_card = 1
     current_page = 1
     products = []
@@ -120,3 +128,5 @@ def get_products(category: int, keyword: str, amount: int, without: list = []):
         if end:
             break
         current_page += 1
+
+    return products
