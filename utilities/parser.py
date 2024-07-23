@@ -35,7 +35,7 @@ def get_htmlCode(link: str) -> str:
     :return: HTML-код
     """
     edge_options = Options()
-    # edge_options.add_argument('--headless')
+    edge_options.add_argument('--headless')
     driver = webdriver.Edge(options=edge_options)
     driver.get(link)
     time.sleep(2)
