@@ -3,6 +3,7 @@ import asyncio
 
 # Локальные модули
 from create_bot import bot, dp
+from handlers import client
 
 
 # Функции при запуске и выключении бота
@@ -21,7 +22,7 @@ async def main():
     dp.shutdown.register(onshutdown)
 
     dp.include_routers(
-
+        client.router
     )
 
     await bot.delete_webhook(drop_pending_updates=True)

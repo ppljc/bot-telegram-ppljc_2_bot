@@ -1,5 +1,7 @@
 # Python модули
 import time
+import urllib.parse
+
 import requests
 import os
 
@@ -62,20 +64,22 @@ def parse_htmlCode(html_code: str, name: str, class_: str):
     return soup_code
 
 
-def get_products(category: int, keyword: str, amount: int, without: list = []) -> list[dict]:
+def get_products(keyword: str, amount: int, sort: str = 'popular',  without: list = []) -> list[dict]:
     """
     Получает список товаров по заданным параметрам.
-    :param category: Категория (цифрой)
     :param keyword: Ключевое слово
     :param amount: Количество товаров
+    :param sort: Параметр, по которому происходит сортировка товара
     :param without: Список товаров (id), которые не нужно добавлять
     :return: Список товаров (имя, цена, id)
     """
     current_card = 1
     current_page = 1
     products = []
+
     while current_card <= amount:
-        link = f'https://www.wildberries.ru/catalog/0/search.aspx?page={current_page}&sort=popular&search={keyword}&ssubject={category}'
+        content = urllib.parse.urlencode({'page': current_page, 'sort': sort, 'search': keyword})
+        link = f'https://www.wildberries.ru/catalog/0/search.aspx?{content}'
 
         html_code = get_htmlCode(link=link)
         html_products = parse_htmlCode(
@@ -102,22 +106,23 @@ def get_products(category: int, keyword: str, amount: int, without: list = []) -
                 continue
 
             link_photo = '/'.join(link_photos.split('/')[:6]) + f'/images/big/1.webp'
-            path_photos = f'C:/Users/tony_/PycharmProjects/bot-telegram_wildberries-parser/images'
-            path_photo = f'{path_photos}/{id}.webp'
-            if not os.path.exists(path_photos):
-                os.makedirs(path_photos)
-            position_photo = requests.get(
-                url=link_photo,
-                stream=True
-            )
-            with open(path_photo, 'wb') as file:
-                for chunk in position_photo.iter_content(chunk_size=8192):
-                    file.write(chunk)
+            # path_photos = f'C:/Users/tony_/PycharmProjects/bot-telegram_wildberries-parser/images'
+            # path_photo = f'{path_photos}/{id}.webp'
+            # if not os.path.exists(path_photos):
+            #     os.makedirs(path_photos)
+            # position_photo = requests.get(
+            #     url=link_photo,
+            #     stream=True
+            # )
+            # with open(path_photo, 'wb') as file:
+            #     for chunk in position_photo.iter_content(chunk_size=8192):
+            #         file.write(chunk)
 
             products.append({
                 'name': name,
                 'price': price,
-                'id': id
+                'id': id,
+                'photo': link_photo
             })
 
             if current_card >= amount:
