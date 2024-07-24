@@ -34,15 +34,18 @@ def get_htmlCode(link: str) -> str:
     :param link: Ссылка
     :return: HTML-код
     """
-    edge_options = Options()
-    edge_options.add_argument('--headless')
-    driver = webdriver.Edge(options=edge_options)
-    driver.get(link)
-    time.sleep(2)
-    scroll_down(driver, scrolls=15)
-    html_code = driver.page_source
-    driver.quit()
-    return html_code
+    try:
+        edge_options = Options()
+        edge_options.add_argument('--headless')
+        driver = webdriver.Edge(options=edge_options)
+        driver.get(link)
+        time.sleep(2)
+        scroll_down(driver, scrolls=15)
+        html_code = driver.page_source
+        driver.quit()
+        return html_code
+    except Exception as e:
+        print(f'Ошибка {e}')
 
 
 def parse_htmlCode(html_code: str, name: str, class_: str):
