@@ -1,8 +1,7 @@
 # Python модули
 import time
 import urllib.parse
-import requests
-import os
+import math
 
 from selenium import webdriver
 from selenium.webdriver.edge.options import Options
@@ -31,19 +30,22 @@ def scroll_down(driver: webdriver, scrolls: int) -> None:
 
 
 # Основные функции
-def get_htmlCode(link: str) -> str:
+def get_htmlCode(link: str, amount: int = 60) -> str:
     """
     Получает HTML-код страницы по заданной ссылке.
     :param link: Ссылка
+    :param amount:
     :return: HTML-код
     """
     try:
         edge_options = Options()
         edge_options.add_argument('--headless')
+        edge_options.add_argument('--remote-debugging-port=0')
         driver = webdriver.Edge(options=edge_options)
         driver.get(link)
         time.sleep(2)
-        scroll_down(driver, scrolls=15)
+        scrolls = math.ceil(amount / 4)
+        scroll_down(driver, scrolls=scrolls)
         html_code = driver.page_source
         driver.quit()
         return html_code
@@ -87,7 +89,10 @@ def get_products(keyword: str, amount: int, sort: str = 'popular',  without: lis
         content = urllib.parse.urlencode({'page': current_page, 'sort': sort, 'search': keyword})
         link = f'https://www.wildberries.ru/catalog/0/search.aspx?{content}'
 
-        html_code = get_htmlCode(link=link)
+        html_code = get_htmlCode(
+            link=link,
+            amount=amount
+        )
         html_products = parse_htmlCode(
             html_code=html_code,
             name='article',
@@ -100,7 +105,11 @@ def get_products(keyword: str, amount: int, sort: str = 'popular',  without: lis
                 class_='product-card j-card-item'
             )
 
-        logger.debug(f'USER=BOT, MESSAGE="html_products={len(html_products)}"')
+        if html_products:
+            products_len = len(html_products)
+        else:
+            products_len = 0
+        logger.debug(f'USER=BOT, MESSAGE="html_products={products_len}"')
 
         end = False
 
