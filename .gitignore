@@ -1,4 +1,6 @@
 *.idea
 *.venv
 *.git
-config.py
+*logs
+.env
+

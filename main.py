@@ -4,16 +4,18 @@ import asyncio
 # Локальные модули
 from create_bot import bot, dp
 from handlers import client
+from utilities.logger import logger
 
 
 # Функции при запуске и выключении бота
 async def onstartup():
     bot_user = await bot.get_me()
-    print(f'{bot_user.full_name} [@{bot_user.username}] up and running | 🌄')
+    logger.info(f'BOT_NAME="{bot_user.full_name}", BOT_USERNAME="{bot_user.username}", MESSAGE="up and running..."')
 
 
 async def onshutdown():
-    print('Shutting down... | 💤')
+    bot_user = await bot.get_me()
+    logger.info(f'BOT_NAME="{bot_user.full_name}", BOT_USERNAME="{bot_user.username}", MESSAGE="shutting down..."')
 
 
 # Функция запуска бота

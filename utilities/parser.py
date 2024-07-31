@@ -1,13 +1,16 @@
 # Python модули
 import time
 import urllib.parse
-
 import requests
 import os
 
 from selenium import webdriver
 from selenium.webdriver.edge.options import Options
 from bs4 import BeautifulSoup
+
+
+# Локальные модули
+from utilities.logger import logger
 
 
 # Переменные
@@ -97,6 +100,8 @@ def get_products(keyword: str, amount: int, sort: str = 'popular',  without: lis
                 class_='product-card j-card-item'
             )
 
+        logger.debug(f'USER=BOT, MESSAGE="html_products={len(html_products)}"')
+
         end = False
 
         for product in html_products:
@@ -109,17 +114,6 @@ def get_products(keyword: str, amount: int, sort: str = 'popular',  without: lis
                 continue
 
             link_photo = '/'.join(link_photos.split('/')[:6]) + f'/images/big/1.webp'
-            # path_photos = f'C:/Users/tony_/PycharmProjects/bot-telegram_wildberries-parser/images'
-            # path_photo = f'{path_photos}/{id}.webp'
-            # if not os.path.exists(path_photos):
-            #     os.makedirs(path_photos)
-            # position_photo = requests.get(
-            #     url=link_photo,
-            #     stream=True
-            # )
-            # with open(path_photo, 'wb') as file:
-            #     for chunk in position_photo.iter_content(chunk_size=8192):
-            #         file.write(chunk)
 
             products.append({
                 'name': name,

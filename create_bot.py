@@ -5,16 +5,17 @@ from aiogram.fsm.storage.memory import MemoryStorage
 
 
 # Локальные модули
-import config
+from config import BOT_TOKEN
 
 
 # Основные объекты для взаимодействия
 def_props = DefaultBotProperties(
     parse_mode='HTML',
+    link_preview_is_disabled=True
 )
 
 bot = Bot(
-    token=config.TOKEN,
+    token=BOT_TOKEN,
     default=def_props
 )
 
