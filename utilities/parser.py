@@ -4,7 +4,7 @@ import urllib.parse
 import math
 
 from selenium import webdriver
-from selenium.webdriver.edge.options import Options
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 
 
@@ -38,10 +38,12 @@ def get_htmlCode(link: str, amount: int = 60) -> str:
     :return: HTML-код
     """
     try:
-        edge_options = Options()
-        edge_options.add_argument('--headless')
-        edge_options.add_argument('--remote-debugging-port=0')
-        driver = webdriver.Edge(options=edge_options)
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Chrome(options=chrome_options)
         driver.get(link)
         time.sleep(2)
         scrolls = math.ceil(amount / 4)
