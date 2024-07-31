@@ -3,7 +3,7 @@ import asyncio
 
 # Локальные модули
 from create_bot import bot, dp
-from handlers import client
+from handlers import client, other
 from utilities.logger import logger
 
 
@@ -24,7 +24,8 @@ async def main():
     dp.shutdown.register(onshutdown)
 
     dp.include_routers(
-        client.router
+        client.router,
+        other.router
     )
 
     await bot.delete_webhook(drop_pending_updates=True)
